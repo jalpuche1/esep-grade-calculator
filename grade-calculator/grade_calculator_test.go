@@ -87,3 +87,36 @@ func TestGradeTypeString(t *testing.T) {
 		}
 	}
 }
+
+func TestPassFailAtPassingBoundary(t *testing.T) {
+	gc := NewGradeCalculator(true)
+	gc.AddGrade("assignment", 70, Assignment)
+	gc.AddGrade("exam", 70, Exam)
+	gc.AddGrade("essay", 70, Essay)
+
+	if actual := gc.GetFinalGrade(); actual != "Pass" {
+		t.Errorf("Expected Pass; got %q", actual)
+	}
+}
+
+func TestPassFailBelowPassingBoundary(t *testing.T) {
+	gc := NewGradeCalculator(true)
+	gc.AddGrade("assignment", 69, Assignment)
+	gc.AddGrade("exam", 69, Exam)
+	gc.AddGrade("essay", 69, Essay)
+
+	if actual := gc.GetFinalGrade(); actual != "Fail" {
+		t.Errorf("Expected Fail; got %q", actual)
+	}
+}
+
+func TestExplicitLetterGradeMode(t *testing.T) {
+	gc := NewGradeCalculator(false)
+	gc.AddGrade("assignment", 70, Assignment)
+	gc.AddGrade("exam", 70, Exam)
+	gc.AddGrade("essay", 70, Essay)
+
+	if actual := gc.GetFinalGrade(); actual != "C" {
+		t.Errorf("Expected C; got %q", actual)
+	}
+}
